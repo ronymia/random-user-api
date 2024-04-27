@@ -5,7 +5,20 @@ const userJsonFile = path.join("public", "/randomUsers.json"); // import json fi
 
 // get a single random user
 module.exports.getRandomUser = (req, res) => {
-    res.send("random user");
+    try {
+        const usersJson = fs.readFileSync(userJsonFile); // get json data from file
+        const users = JSON.parse(usersJson); // convert to js object
+        const randomUserIndex = Math.floor(Math.random() * users.length); // get random user index
+        const randomUser = users[randomUserIndex]; // get random user
+        //
+        res.json(randomUser);
+    } catch (error) {
+        // console.error(error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error"
+        });
+    }
 };
 
 // get all user controller
@@ -38,7 +51,7 @@ module.exports.getSingleUser = (req, res) => {
         const users = JSON.parse(usersJson); // convert to js object
         const { id } = req.params; // user id from query params
         // console.log( typeof id);
-        const result = users.find(user=> user.id === Number(id)); // get user by id
+        const result = users.find(user => user.id === Number(id)); // get user by id
         // console.log(result); 
         if (!result) {
             throw Error(`User not Exist given ID:${id}`);
@@ -58,22 +71,22 @@ module.exports.getSingleUser = (req, res) => {
 
 // post a single user 
 module.exports.saveSingleUser = (req, res) => {
-     res.send("save user");
+    res.send("save user");
 };
 
 // update a single user controller
 module.exports.updateSingleUser = (req, res) => {
-     res.send("update user");
+    res.send("update user");
 };
 
 
 // update bulk user controller
 module.exports.updateBulkUser = (req, res) => {
-     res.send("update bulk user");
+    res.send("update bulk user");
 };
 
 
 // delete user controller
 module.exports.deleteUser = (req, res) => {
-     res.send("Delete a user");
+    res.send("Delete a user");
 };
