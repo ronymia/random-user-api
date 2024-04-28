@@ -71,7 +71,65 @@ module.exports.getSingleUser = (req, res) => {
 
 // post a single user 
 module.exports.saveSingleUser = (req, res) => {
-    res.send("save user");
+    const usersJson = fs.readFileSync(userJsonFile); // get json data from file
+    const users = JSON.parse(usersJson); // convert to js object
+    const newUser = req.body;
+    // console.log(newUser.hasOwnProperty('id'));
+    // if (!newUser.hasOwnProperty('id')) {
+    //     return res.status(422).json({
+    //         success: false,
+    //         error: "id  field is required",
+    //     });
+    // }
+    // validating required
+    const requiredField = [
+        "id",
+        "name",
+        "gender",
+        "contact",
+        "address",
+        "photoUrl"
+    ].map(field => {
+        if (!newUser.hasOwnProperty(field)) {
+            return `${field} field is required`;
+        }
+    }).filter(field => field !== undefined && field !== null);
+
+    // return if required fields are not present
+    if (requiredField?.length !== 0) {
+        return res.status(422).json({
+            success: false,
+            error: requiredField,
+        });
+    }
+
+    // checking user is already exist or not
+    const existingUser = users.find(user => user.id === newUser.id);
+    if (!!existingUser) {
+        return res.status(200).json({
+            success: false,
+            error: "User already exist"
+        });
+    };
+    // save new user in previous file
+    users.push(newUser);
+    const userJson = JSON.stringify(users);
+    
+    // overwrite file
+    fs.writeFile(userJsonFile, userJson, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+        return res.status(201).json({
+            success: true,
+            data: newUser,
+            message: "success"
+        });
+    });
 };
 
 // update a single user controller
