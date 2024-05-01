@@ -114,7 +114,7 @@ module.exports.saveSingleUser = (req, res) => {
     // save new user in previous file
     users.push(newUser);
     const userJson = JSON.stringify(users);
-    
+
     // overwrite file
     fs.writeFile(userJsonFile, userJson, (err, data) => {
         if (err) {
@@ -134,7 +134,52 @@ module.exports.saveSingleUser = (req, res) => {
 
 // update a single user controller
 module.exports.updateSingleUser = (req, res) => {
-    res.send("update user");
+    const usersJson = fs.readFileSync(userJsonFile); // get json data from file
+    const users = JSON.parse(usersJson); // convert to js object
+    const newUser = req.body;
+    // console.log(newUser.hasOwnProperty('id'));
+    if (!newUser.hasOwnProperty('id')) {
+        return res.status(422).json({
+            success: false,
+            error: "id  field is required",
+        });
+    }
+    // replace new values
+    const updateDoc = {
+        name: newUser.name,
+        gender: newUser.gender,
+        contact: newUser.contact,
+        address: newUser.address,
+        photoUrl: newUser.photoUrl,
+    }
+
+    // iterate through map to find out id specific user and update values
+    const updatedUsers = users.map(user => {
+        if (user?.id === newUser?.id) {
+            // create a new object with updated values
+            return { ...user, ...updateDoc }
+        }
+        // Otherwise, return the original object unchanged
+        return user;
+    });
+    // convert to json
+    const userJson = JSON.stringify(updatedUsers);
+
+    // update json file
+    fs.writeFile(userJsonFile, userJson, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: newUser,
+            message: "success"
+        });
+    });
 };
 
 

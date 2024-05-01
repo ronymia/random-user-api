@@ -1,1 +1,26 @@
-[{"id":1,"gender":"male","name":"Akash","contact":"01321185989","address":"Faridpur","photoUrl":"01321185989"},{"id":2,"gender":"male","name":"Rony","contact":"01321185989","address":"Faridpur","photoUrl":"01321185989"},{"id":3,"gender":"male","name":"Tony","contact":"01321185989","address":"Faridpur","photoUrl":"01321185989"},{"id":3,"name":"Tony","contact":"01321185989","address":"Faridpur","photoUrl":"01321185989"}]
+[
+    {
+        "id": 1,
+        "gender": "male",
+        "name": "Akash",
+        "contact": "01321185989",
+        "address": "Faridpur",
+        "photoUrl": "01321185989"
+    },
+    {
+        "id": 2,
+        "gender": "male",
+        "name": "Rony",
+        "contact": "01321185989",
+        "address": "Faridpur",
+        "photoUrl": "01321185989"
+    },
+    {
+        "id": 3,
+        "gender": "mmm",
+        "name": "nnnn",
+        "contact": "01321185989",
+        "address": "Faridpur",
+        "photoUrl": "01321185989"
+    }
+]
