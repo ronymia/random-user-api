@@ -191,5 +191,33 @@ module.exports.updateBulkUser = (req, res) => {
 
 // delete user controller
 module.exports.deleteUser = (req, res) => {
-    res.send("Delete a user");
+    const usersJson = fs.readFileSync(userJsonFile); // get json data from file
+    const users = JSON.parse(usersJson); // convert to js object
+    const { id } = req.query; // user id from query params
+    // console.log(typeof id);
+    const result = users.find(user => user.id === Number(id)); // get user by id
+    // console.log(result); 
+    if (!result) {
+        return res.status(200).json({
+            success: false,
+            message: "Invalid user id"
+        });
+    }
+
+    const restUsers = users.filter(user => user.id !== Number(id)); // get rest of users
+    const userJson = JSON.stringify(restUsers);
+    // overwrite file
+    fs.writeFile(userJsonFile, userJson, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "success"
+        });
+    });
 };

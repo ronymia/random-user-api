@@ -124,7 +124,7 @@ router.patch("/bulk-update" , userController.updateBulkUser);
 *
 * @apiQuery {id}   [id=1] => id means user id
 *
-*@apiSuccess {Object} Response=> user object
+*@apiSuccess {Object} Response=> boolean
 *
 *@apiError {Unauthorized 401} => only authorized users can access this
 *@apiError {forbidden 403} => only only can access this
