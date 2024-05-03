@@ -185,7 +185,32 @@ module.exports.updateSingleUser = (req, res) => {
 
 // update bulk user controller
 module.exports.updateBulkUser = (req, res) => {
-    res.send("update bulk user");
+    const usersJson = fs.readFileSync(userJsonFile); // Read JSON data from file
+    const users = JSON.parse(usersJson); // Convert JSON to JS object
+
+    const updates = req.body; // Get updates from request body
+
+    // Iterate through users array and apply updates
+    const updatedUsers = users.map(user => {
+        const updateUser = updates.find(update => update.id === user.id);
+        return updateUser ? { ...user, ...updateUser } : user;
+    });
+
+    // Write updated user data back to JSON file
+    fs.writeFile(userJsonFile, JSON.stringify(updatedUsers), (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Bulk update successful"
+        });
+    });
+
 };
 
 
